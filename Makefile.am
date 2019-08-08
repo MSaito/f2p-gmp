@@ -1,0 +1,4 @@
+SUBDIRS = src
+ACLOCAL_AMFLAGS = -I m4
+AM_CFLAGS = -O3 -Wall -Wextra -std=c99
+#EXTRA_DIST = README.md README-JP.md
