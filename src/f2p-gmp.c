@@ -212,7 +212,7 @@ void f2p_powermod(mpz_t r, mpz_t x, mpz_t e, mpz_t mod, int wp, mpz_t *wm)
         if (mpz_tstbit(e, bpos) == 1) {
             f2p_mulmod(r, r, *s, mod, wp, wm);
         }
-        f2p_pow2mod(r, r, mod, wp, wm);
+        f2p_pow2mod(*s, *s, mod, wp, wm);
         bpos++;
     }
     //mpz_set(r, *z);

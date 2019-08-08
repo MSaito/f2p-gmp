@@ -418,7 +418,7 @@ int test_powermod(int verbose, int wp, mpz_t *wm)
     f2p_get_str(buff, *rem);
     if (strcmp(buff, "1") != 0) {
         printf("test_powermod failure 5 expected 1 returns %s\n", buff);
-        r = 1;
+        r += 1;
     }
     f2p_get_str(buff, *mod);
     if (strcmp(buff, "111") != 0) {
@@ -437,13 +437,13 @@ int test_powermod(int verbose, int wp, mpz_t *wm)
     }
 
     f2p_set_str(*x, "11");
-    mpz_set_ui(*e, 4);
+    mpz_set_ui(*e, 5);
     f2p_set_str(*mod, "111");
     f2p_powermod(*rem, *x, *e, *mod, wp, wm);
     f2p_get_str(buff, *rem);
-    if (strcmp(buff, "11") != 0) {
-        printf("test_powermod failure 9 expected 11 returns %s\n", buff);
-        r = 1;
+    if (strcmp(buff, "10") != 0) {
+        printf("test_powermod failure 10 expected 10 returns %s\n", buff);
+        r += 1;
     }
     if (verbose) {
         printf("end test_powermod\n");
