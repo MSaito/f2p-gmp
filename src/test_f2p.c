@@ -1,15 +1,15 @@
 #include "f2p-gmp.h"
 #include <string.h>
 
-int test_string(int verbose, int wp, mpz_t *wm)
+int test_string(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_string\n");
     }
     char * str1 = "101";
     char buffer[100];
-    mpz_t *x = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
     f2p_set_str(*x, str1);
     f2p_get_str(buffer, *x);
     int r;
@@ -25,14 +25,14 @@ int test_string(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_degree(int verbose, int wp, mpz_t *wm)
+int test_degree(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_degree\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
 
     f2p_set_str(*x, "101");
     int deg = f2p_degree(*x);
@@ -52,16 +52,16 @@ int test_degree(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_add(int verbose, int wp, mpz_t *wm)
+int test_add(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_add\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    mpz_t *y = &wm[wp++];
-    mpz_t *z = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    mpz_t *y = &(wm->ar[wp++]);
+    mpz_t *z = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
 
     f2p_set_str(*x, "101");
     f2p_set_str(*y, "011");
@@ -85,14 +85,14 @@ int test_add(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_lshift(int verbose, int wp, mpz_t *wm)
+int test_lshift(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_lshift\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
 
     f2p_set_str(*x, "101");
     f2p_lshift(*x, 2);
@@ -115,14 +115,14 @@ int test_lshift(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_rshift(int verbose, int wp, mpz_t *wm)
+int test_rshift(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_rshift\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
 
     f2p_set_str(*x, "1011");
     f2p_rshift(*x, 2);
@@ -152,14 +152,14 @@ int test_rshift(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_coefficient(int verbose, int wp, mpz_t *wm)
+int test_coefficient(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_coefficient\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
 
     f2p_set_str(*x, "1011");
     int c = f2p_coefficient(*x, 0);
@@ -188,15 +188,15 @@ int test_coefficient(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_mod(int verbose, int wp, mpz_t *wm)
+int test_mod(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_mod\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    mpz_t *y = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    mpz_t *y = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
     char buff[200];
 
     f2p_set_str(*x, "1011");
@@ -221,17 +221,17 @@ int test_mod(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_divrem(int verbose, int wp, mpz_t *wm)
+int test_divrem(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_divrem\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    mpz_t *y = &wm[wp++];
-    mpz_t *q = &wm[wp++];
-    mpz_t *rem = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    mpz_t *y = &(wm->ar[wp++]);
+    mpz_t *q = &(wm->ar[wp++]);
+    mpz_t *rem = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
     char buff[200];
 
     f2p_set_str(*x, "1011");
@@ -310,23 +310,37 @@ int test_divrem(int verbose, int wp, mpz_t *wm)
         r += 1;
     }
 
+    f2p_set_str(*x, "1011");
+    f2p_set_str(*y, "1");
+    f2p_divrem(*q, *rem, *x, *y, wp, wm);
+    f2p_get_str(buff, *q);
+    if (strcmp(buff, "1011") != 0) {
+        printf("test_divrem failure 11 expected 1011 returns %s\n", buff);
+        r += 1;
+    }
+    f2p_get_str(buff, *rem);
+    if (strcmp(buff, "0") != 0) {
+        printf("test_divrem failure 12 expected 0 returns %s\n", buff);
+        r += 1;
+    }
+
     if (verbose) {
         printf("end test_divrem\n");
     }
     return r;
 }
 
-int test_mulmod(int verbose, int wp, mpz_t *wm)
+int test_mulmod(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_mulmod\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    mpz_t *y = &wm[wp++];
-    mpz_t *mod = &wm[wp++];
-    mpz_t *rem = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    mpz_t *y = &(wm->ar[wp++]);
+    mpz_t *mod = &(wm->ar[wp++]);
+    mpz_t *rem = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
     char buff[200];
 
     f2p_set_str(*x, "101");
@@ -374,17 +388,17 @@ int test_mulmod(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
-int test_powermod(int verbose, int wp, mpz_t *wm)
+int test_powermod(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_powermod\n");
     }
     int r = 0;
-    mpz_t *x = &wm[wp++];
-    mpz_t *e = &wm[wp++];
-    mpz_t *mod = &wm[wp++];
-    mpz_t *rem = &wm[wp++];
-    assert(wp <= F2P_WMSIZE);
+    mpz_t *x = &(wm->ar[wp++]);
+    mpz_t *e = &(wm->ar[wp++]);
+    mpz_t *mod = &(wm->ar[wp++]);
+    mpz_t *rem = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
     char buff[200];
 
     f2p_set_str(*x, "11");
@@ -451,6 +465,7 @@ int test_powermod(int verbose, int wp, mpz_t *wm)
     return r;
 }
 
+
 int main(int argc, char * argv[])
 {
     int verbose = 0;
@@ -459,22 +474,22 @@ int main(int argc, char * argv[])
         verbose = 1;
     }
     int wp = 0;
-    mpz_t wm[F2P_WMSIZE];
+    f2p_wm_t wm;
 
-    f2p_wm_init(wm);
+    f2p_wm_init(&wm, 20);
 
-    r += test_string(verbose, wp, wm);
-    r += test_degree(verbose, wp, wm);
-    r += test_add(verbose, wp, wm);
-    r += test_lshift(verbose, wp, wm);
-    r += test_rshift(verbose, wp, wm);
-    r += test_coefficient(verbose, wp, wm);
-    r += test_mod(verbose, wp, wm);
-    r += test_divrem(verbose, wp, wm);
-    r += test_mulmod(verbose, wp, wm);
-    r += test_powermod(verbose, wp, wm);
+    r += test_string(verbose, wp, &wm);
+    r += test_degree(verbose, wp, &wm);
+    r += test_add(verbose, wp, &wm);
+    r += test_lshift(verbose, wp, &wm);
+    r += test_rshift(verbose, wp, &wm);
+    r += test_coefficient(verbose, wp, &wm);
+    r += test_mod(verbose, wp, &wm);
+    r += test_divrem(verbose, wp, &wm);
+    r += test_mulmod(verbose, wp, &wm);
+    r += test_powermod(verbose, wp, &wm);
 
-    f2p_wm_clear(wm);
+    f2p_wm_clear(&wm);
 
     if (r == 0) {
         return 0;
