@@ -14,11 +14,21 @@ AC_CANONICAL_HOST
 # Checks for programs.
 : ${CFLAGS=""}
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_INSTALL
 #AC_PROG_LIBTOOL
 
 # keep this order
 AC_CHECK_LIB(gmp, __gmpz_init)
+AC_CHECK_LIB(gf2x, gf2x_mul)
+AC_CHECK_LIB(ntl, main)
+
+AC_LANG_PUSH(C++)
+AX_CXX_COMPILE_STDCXX_0X
+
+AX_CXX_COMPILE_STDCXX_14(noext, optional) # keep this order
+AX_CXX_COMPILE_STDCXX_11(noext, optional)
+AC_LANG_POP
 
 # Checks for header files.
 AC_HEADER_STDC

@@ -87,9 +87,11 @@ void f2p_powermod(mpz_t r, mpz_t x, mpz_t e, mpz_t mod, int wp, f2p_wm_t *wm);
 void f2p_exeuclid(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y,
                   int wp, f2p_wm_t *wm);
 
-void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
+//void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
+//                   int wp, f2p_wm_t *wm);
+void f2p_exeuclid2(mpz_t a, mpz_t c, mpz_t x, mpz_t y, int m,
                    int wp, f2p_wm_t *wm);
 
-void minpoly(char * minpoly, f2rng gen, int mexp);
+void f2p_minpoly(char * minpoly, f2rng gen, int mexp);
 
 #endif // F2P_GMP_H

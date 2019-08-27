@@ -426,7 +426,7 @@ void f2p_exeuclid(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y,
  * calculate a, b, c for given x, y
  * where a*x + b*y = c (c = GCD(x, y))
  *
- * use 13 wm
+ * use 10 wm
  *
  *@see https://planetmath.org/berlekampmasseyalgorithm
  *
@@ -439,8 +439,10 @@ void f2p_exeuclid(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y,
  *@param wp
  *@param wm
  */
-void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
-                  int wp, f2p_wm_t *wm)
+//void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
+//                  int wp, f2p_wm_t *wm)
+void f2p_exeuclid2(mpz_t a, mpz_t c, mpz_t x, mpz_t y, int m,
+                   int wp, f2p_wm_t *wm)
 {
     PUTS("f2p_exeuclid2 start\n");
     //mp_bitcnt_t max_deg = m;
@@ -455,9 +457,9 @@ void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
     mpz_t *a0 = &(wm->ar[wp++]);
     mpz_t *a1 = &(wm->ar[wp++]);
     mpz_t *a2 = &(wm->ar[wp++]);
-    mpz_t *b0 = &(wm->ar[wp++]);
-    mpz_t *b1 = &(wm->ar[wp++]);
-    mpz_t *b2 = &(wm->ar[wp++]);
+    //mpz_t *b0 = &(wm->ar[wp++]);
+    //mpz_t *b1 = &(wm->ar[wp++]);
+    //mpz_t *b2 = &(wm->ar[wp++]);
     mpz_t *tmp = &(wm->ar[wp++]);
     //mpz_t *t; 後で使う
     assert(wp <= wm->max_size);
@@ -467,14 +469,14 @@ void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
     mpz_set(*r1, y);
     mpz_set_ui(*a0, 1);
     mpz_set_ui(*a1, 0);
-    mpz_set_ui(*b0, 0);
-    mpz_set_ui(*b1, 1);
+    //mpz_set_ui(*b0, 0);
+    //mpz_set_ui(*b1, 1);
     PRT("r0 = ", *r0);
     PRT("r1 = ", *r1);
     PRT("a0 = ", *a0);
     PRT("a1 = ", *a1);
-    PRT("b0 = ", *b0);
-    PRT("b1 = ", *b1);
+    //PRT("b0 = ", *b0);
+    //PRT("b1 = ", *b1);
     int dr = f2p_degree(*r0);
     while (dr >= m) {
         //while (mpz_cmp_ui(*r1, 0) > 0) {
@@ -485,24 +487,24 @@ void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
         PUTS("f2p_add\n");
         f2p_add(*a2, *a0, *tmp);
         PUTS("f2p_mul\n");
-        f2p_mul(*tmp, *q1, *b1, wp, wm);// 2 wm
-        PUTS("f2p_add\n");
-        f2p_add(*b2, *b0, *tmp);
+        //f2p_mul(*tmp, *q1, *b1, wp, wm);// 2 wm
+        //PUTS("f2p_add\n");
+        //f2p_add(*b2, *b0, *tmp);
         PRT("r0 = ", *r0);
         PRT("r1 = ", *r1);
         PRT("r2 = ", *r2);
         PRT("a0 = ", *a0);
         PRT("a1 = ", *a1);
         PRT("a2 = ", *a2);
-        PRT("b0 = ", *b0);
-        PRT("b1 = ", *b1);
-        PRT("b2 = ", *b2);
+        //PRT("b0 = ", *b0);
+        //PRT("b1 = ", *b1);
+        //PRT("b2 = ", *b2);
         mpz_set(*r0, *r1);
         mpz_set(*r1, *r2);
         mpz_set(*a0, *a1);
         mpz_set(*a1, *a2);
-        mpz_set(*b0, *b1);
-        mpz_set(*b1, *b2);
+        //mpz_set(*b0, *b1);
+        //mpz_set(*b1, *b2);
         dr = f2p_degree(*r0);
         //int da = f2p_degree(*a0);
         //int db = f2p_degree(*b0);
@@ -516,13 +518,13 @@ void f2p_exeuclid2(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y, int m,
     PRT("a0 = ", *a0);
     mpz_set(a, *a0);
     PRT("b0 = ", *b0);
-    mpz_set(b, *b0);
+    //mpz_set(b, *b0);
     PRT("r0 = ", *r0);
     mpz_set(c, *r0);
     PUTS("f2p_exeuclid2 end\n");
 }
 
-void minpoly(char * minpoly, f2rng gen, int mexp)
+void f2p_minpoly(char * minpoly, f2rng gen, int mexp)
 {
     PUTS("minpoly start\n");
     f2p_wm_t wm;
@@ -530,12 +532,13 @@ void minpoly(char * minpoly, f2rng gen, int mexp)
     f2p_wm_init(&wm, 20);
     mpz_t *poly = &(wm.ar[wp++]);
     mpz_t *seq = &(wm.ar[wp++]);
-    mpz_t *b = &(wm.ar[wp++]);
+    //mpz_t *b = &(wm.ar[wp++]);
     mpz_t *c = &(wm.ar[wp++]);
     mpz_t *x2t = &(wm.ar[wp++]);
     mpz_setbit(*x2t, 2 * mexp);
     //mpz_setbit(*x2t, 0);
     for (int i = 0; i < 2 * mexp; i++) {
+//    for (int i = 2 * mexp - 1; i >= 0; i--) {
         unsigned int x = gen();
         if (x & 1) {
             mpz_setbit(*seq, i);
@@ -544,9 +547,10 @@ void minpoly(char * minpoly, f2rng gen, int mexp)
         }
     }
     PRT("seq = ", *seq);
-    f2p_exeuclid2(*b, *poly, *c, *x2t, *seq, mexp, wp, &wm); // 13 wm
+    //f2p_exeuclid2(*poly, *b, *c, *seq, *x2t, mexp, wp, &wm); // 13 wm
+    f2p_exeuclid2(*poly, *c, *seq, *x2t, mexp, wp, &wm); // 13 wm
     PRT("poly = ", *poly);
-    PRT("b = ", *b);
+    //PRT("b = ", *b);
     PRT("c = ", *c);
     PRT("seq = ", *seq);
     PRT("x2t = ", *x2t);
