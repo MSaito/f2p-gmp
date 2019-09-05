@@ -123,6 +123,8 @@ extern "C" {
 //    int f2p_is_irreducible(const char * poly);
     int f2p_is_irreducible(mpz_t poly);
 
+    void f2p_calc_jump(mpz_t jump, mpz_t minpoly, mpz_t step);
+
 #if defined(__cplusplus)
 }
 #endif

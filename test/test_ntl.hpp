@@ -7,7 +7,7 @@
 #include <inttypes.h>
 #include <ctype.h>
 
-static inline void to_string(std::string& str, const NTL::GF2X& poly)
+static inline void to_hexstring(std::string& str, const NTL::GF2X& poly)
 {
     int d = deg(poly);
     int m = d / 64;

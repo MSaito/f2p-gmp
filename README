@@ -1,7 +1,4 @@
-# dcmt64
-Dynamic Creator of 64bit Mersenne Twister
+# f2p_gmp
+F2 Polynomial lib based on GMP (GNU Multi-Precision Library)
 
-***UNDER CONSTRUCTION***
-
-It is difficult for me to control MPI environment using autotools,
-please modify and use src/Makefile.mpi.
+Minimum functions

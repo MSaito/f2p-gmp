@@ -55,7 +55,7 @@ int test_irreducible(int n, const bool verbose)
     BuildIrred(poly, n);
     for (int i = 0; i < 100; i++) {
         BuildRandomIrred(ranpoly, poly);
-        to_string(str, ranpoly);
+        to_hexstring(str, ranpoly);
         int r = test_irreducible(str);
         if (verbose) {
             printf("%c", okstr[r & 1]);
@@ -64,7 +64,7 @@ int test_irreducible(int n, const bool verbose)
     }
     for (int i = 0; i < 100; i++) {
         random(ranpoly, n);
-        to_string(str, ranpoly);
+        to_hexstring(str, ranpoly);
         int r = test_irreducible(str);
         if (verbose) {
             printf("%c", okstr[r & 1]);

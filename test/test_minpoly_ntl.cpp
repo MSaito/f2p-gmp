@@ -10,8 +10,6 @@
 using namespace NTL;
 using namespace std;
 
-typedef unsigned int (*f2rng)(void);
-
 tinymt32_t tiny32;
 
 unsigned int dummy()
@@ -80,13 +78,13 @@ void ntl_minpoly(GF2X& poly, f2rng gen, int mexp)
 }
 #endif
 
-void ntl_minpoly(GF2X& poly, f2rng gen, int mexp)
+void ntl_minpoly(GF2X& poly, tinymt32_t * tiny32, int mexp)
 {
     GF2X v;
     v.SetLength(2 * mexp);
     //for (int i = 0; i < 2 * mexp; i++) {
     for (int i = 2 * mexp - 1; i >= 0; i--) {
-        v[i] = gen() & 1;
+        v[i] = tinymt32_generate_uint32(tiny32) & 1;
     }
     PRT("seq = ", v);
     //MinPolySeq(poly, v, mexp);
@@ -97,21 +95,21 @@ void ntl_minpoly(GF2X& poly, f2rng gen, int mexp)
     printf("deg(c) = %ld\n", deg(c));
 }
 
-void ntl_minpoly(char * minpoly, f2rng gen, int mexp)
+void ntl_minpoly(char * minpoly, tinymt32_t * tiny32, int mexp)
 {
     GF2X poly;
-    ntl_minpoly(poly, gen, mexp);
+    ntl_minpoly(poly, tiny32, mexp);
     string str;
-    to_string(str, poly);
+    to_hexstring(str, poly);
     strcpy(minpoly, str.c_str());
 }
 
-int ntl_annihilate(const GF2X& poly, f2rng gen, int mexp)
+int ntl_annihilate(const GF2X& poly, tinymt32_t * tiny32, int mexp)
 {
     int bit = 0;
     for (int i = 0; i <= mexp; i++) {
         if (IsOne(poly[i])) {
-            bit ^= gen() & 1;
+            bit ^= tinymt32_generate_uint32(tiny32) & 1;
         }
     }
     if (bit == 0) {
@@ -121,13 +119,13 @@ int ntl_annihilate(const GF2X& poly, f2rng gen, int mexp)
     }
 }
 
-int test_minpoly()
+int test_minpoly(tinymt32_t * tiny32)
 {
     GF2X poly;
-    ntl_minpoly(poly, dummy, 127);
+    ntl_minpoly(poly, tiny32, 127);
     int ok = 1;
     for (int i = 0; i < 100; i++) {
-        int r = ntl_annihilate(poly, dummy, 127);
+        int r = ntl_annihilate(poly, tiny32, 127);
         ok &= r;
         dummy();
         if (r == 1) {
@@ -144,10 +142,10 @@ int test_minpoly()
     }
     //char polystr[200];
     string str;
-    to_string(str, poly);
+    to_hexstring(str, poly);
     printf("poly = %ld,%s\n", deg(poly), str.c_str());
     hexto_poly(poly, str);
-    to_string(str, poly);
+    to_hexstring(str, poly);
     printf("poly = %s\n", str.c_str());
     printf("minpoly end\n");
     //int deg = f2p_degree(poly);
@@ -167,7 +165,7 @@ int main(int argc, char * argv[])
     tiny32.tmat = 0x3793fdff;
 
     tinymt32_init(&tiny32, 1);
-    r += test_minpoly();
+    r += test_minpoly(&tiny32);
     if (r == 0) {
         return 0;
     } else {

@@ -35,5 +35,5 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([inttypes.h stdint.h stdlib.h])
 #AX_EXT
 
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile test/Makefile])
 AC_OUTPUT

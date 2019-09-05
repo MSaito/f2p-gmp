@@ -15,7 +15,7 @@
  */
 
 #include "f2p_gmp.h"
-#include "test_f2p.h"
+#include "debug_f2p.h"
 #include <stdlib.h> // malloc
 
 static void f2p_mul_aux(mpz_t r, mpz_t a, mpz_t b, int wp, f2p_wm_t *wm);
@@ -749,4 +749,24 @@ int f2p_is_irreducible(mpz_t poly)
     f2p_wm_clear(&wm);
     PUTS("f2p_is_irreducible end\n");
     return result;
+}
+
+/**
+ * calc jump
+ *
+ *@param jump result jump polynomial
+ *@param minpoly minimum polynomial of PRNG
+ *@param step jump step
+ */
+void f2p_calc_jump(mpz_t jump, mpz_t minpoly, mpz_t step)
+{
+    PUTS("f2p_calc_jump start\n");
+    f2p_wm_t wm;
+    int wp = 0;
+    f2p_wm_init(&wm, 5);
+    mpz_t *x = &(wm.ar[wp++]);
+    f2p_set_binstr(*x, "10");
+    f2p_powermod(jump, *x, step, minpoly, wp, &wm); // 4
+    f2p_wm_clear(&wm);
+    PUTS("f2p_calc_jump end\n");
 }
