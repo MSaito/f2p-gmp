@@ -710,8 +710,9 @@ int f2p_is_irreducible_aux(mpz_t poly, int wp, f2p_wm_t * wm)
             result = 0;
             break;
         }
-        f2p_mul(*t2m, *t2m, *t2m, wp, wm); // 2 wm
-        f2p_mod(*t2m, poly, wp, wm); // 1 wm
+        //f2p_square(*t2m, *t2m, wp, wm); // 1 wm
+        //f2p_mod(*t2m, poly, wp, wm); // 1 wm
+        f2p_pow2mod(*t2m, *t2m, poly, wp, wm); // 1 wm
         f2p_add(*t, *t2m, *t1);
     }
     PUTS("f2p_is_irreducible_aux end\n");
