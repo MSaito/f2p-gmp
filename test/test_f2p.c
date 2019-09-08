@@ -469,77 +469,77 @@ int test_mulmod(int verbose, int wp, f2p_wm_t *wm)
     return ok;
 }
 
+int test_square_aux(int verbose, char * a, char *b, int wp, f2p_wm_t * wm)
+{
+    int ok = 1;
+    mpz_t *x = &(wm->ar[wp++]);
+    mpz_t *y = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
+    char buff[200];
+    f2p_set_binstr(*x, a);
+    f2p_square(*y, *x, wp, wm);
+    f2p_get_binstr(buff, *y);
+    if (strcmp(buff, b) != 0) {
+        ok = 0;
+    }
+    if (ok == 0 && verbose) {
+        printf("test_square a = %s, result = %s, expected = %s\n",
+               a, buff, b);
+    }
+    return ok;
+}
+
+int test_square(int verbose, int wp, f2p_wm_t *wm)
+{
+    if (verbose) {
+        printf("start test_square\n");
+    }
+    int ok = 1;
+    ok *= test_square_aux(verbose, "0", "0", wp, wm);
+    ok *= test_square_aux(verbose, "1", "1", wp, wm);
+    ok *= test_square_aux(verbose, "11", "101", wp, wm);
+    ok *= test_square_aux(verbose, "101", "10001", wp, wm);
+    ok *= test_square_aux(verbose, "111", "10101", wp, wm);
+    if (verbose) {
+        printf("end test_square\n");
+    }
+    return ok;
+}
+
+int test_powermod_aux(int verbose, char *astr, int eint, char *modstr,
+                      char *res, int wp, f2p_wm_t *wm)
+{
+    int ok = 1;
+    mpz_t *a = &(wm->ar[wp++]);
+    mpz_t *e = &(wm->ar[wp++]);
+    mpz_t *mod = &(wm->ar[wp++]);
+    mpz_t *r = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
+    char buff[200];
+    f2p_set_binstr(*a, astr);
+    mpz_set_ui(*e, eint);
+    f2p_set_binstr(*mod, modstr);
+    f2p_powermod(*r, *a, *e, *mod, wp, wm);
+    f2p_get_binstr(buff, *r);
+    if (strcmp(buff, res) != 0) {
+        ok = 0;
+    }
+    if (!ok && verbose) {
+        printf("%s: a = %s, e = %d, mod = %s, result = %s, expected = %s\n",
+               "test_powermod", astr, eint, modstr, buff, res);
+    }
+    return ok;
+}
+
 int test_powermod(int verbose, int wp, f2p_wm_t *wm)
 {
     if (verbose) {
         printf("start test_powermod\n");
     }
     int ok = 1;
-    mpz_t *x = &(wm->ar[wp++]);
-    mpz_t *e = &(wm->ar[wp++]);
-    mpz_t *mod = &(wm->ar[wp++]);
-    mpz_t *rem = &(wm->ar[wp++]);
-    assert(wp <= wm->max_size);
-    char buff[200];
-
-    f2p_set_binstr(*x, "11");
-    mpz_set_ui(*e, 2);
-    f2p_set_binstr(*mod, "111");
-    f2p_powermod(*rem, *x, *e, *mod, wp, wm);
-    f2p_get_binstr(buff, *rem);
-    if (strcmp(buff, "10") != 0) {
-        printf("test_powermod failure 1 expected 10 returns %s\n", buff);
-        ok = 0;
-    }
-    f2p_get_binstr(buff, *mod);
-    if (strcmp(buff, "111") != 0) {
-        printf("test_powermod failure 2 expected 111 returns %s\n", buff);
-        ok = 0;
-    }
-    f2p_get_binstr(buff, *x);
-    if (strcmp(buff, "11") != 0) {
-        printf("test_powermod failure 3 expected 11 returns %s\n", buff);
-        ok = 0;
-    }
-    int d = mpz_cmp_ui(*e, 2);
-    if (d != 0) {
-        printf("test_powermod failure 4 expected 0 returns %d\n", d);
-        ok = 0;
-    }
-    f2p_set_binstr(*x, "11");
-    mpz_set_ui(*e, 3);
-    f2p_set_binstr(*mod, "111");
-    f2p_powermod(*rem, *x, *e, *mod, wp, wm);
-    f2p_get_binstr(buff, *rem);
-    if (strcmp(buff, "1") != 0) {
-        printf("test_powermod failure 5 expected 1 returns %s\n", buff);
-        ok = 0;
-    }
-    f2p_get_binstr(buff, *mod);
-    if (strcmp(buff, "111") != 0) {
-        printf("test_powermod failure 6 expected 111 returns %s\n", buff);
-        ok = 0;
-    }
-    f2p_get_binstr(buff, *x);
-    if (strcmp(buff, "11") != 0) {
-        printf("test_powermod failure 7 expected 11 returns %s\n", buff);
-        ok = 0;
-    }
-    d = mpz_cmp_ui(*e, 3);
-    if (d != 0) {
-        printf("test_powermod failure 8 expected 0 returns %d\n", d);
-        ok = 0;
-    }
-
-    f2p_set_binstr(*x, "11");
-    mpz_set_ui(*e, 5);
-    f2p_set_binstr(*mod, "111");
-    f2p_powermod(*rem, *x, *e, *mod, wp, wm);
-    f2p_get_binstr(buff, *rem);
-    if (strcmp(buff, "10") != 0) {
-        printf("test_powermod failure 10 expected 10 returns %s\n", buff);
-        ok = 0;
-    }
+    ok *= test_powermod_aux(verbose, "11", 2, "111", "10", wp, wm);
+    ok *= test_powermod_aux(verbose, "11", 3, "111", "1", wp, wm);
+    ok *= test_powermod_aux(verbose, "11", 5, "111", "10", wp, wm);
     if (verbose) {
         printf("end test_powermod\n");
     }
@@ -609,6 +609,7 @@ int main(int argc, char * argv[])
     ok *= test_mod(verbose, wp, &wm);
     ok *= test_divrem(verbose, wp, &wm);
     ok *= test_mulmod(verbose, wp, &wm);
+    ok *= test_square(verbose, wp, &wm);
     ok *= test_powermod(verbose, wp, &wm);
     ok *= test_gcd(verbose, wp, &wm);
     printf("\n");

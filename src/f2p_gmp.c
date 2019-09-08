@@ -277,6 +277,53 @@ static void f2p_mulmod_aux(mpz_t r, mpz_t a, mpz_t b, mpz_t mod,
 }
 
 /**
+ * Calculate r = a * a
+ *
+ * use 1 wm
+ *
+ * @param r result
+ * @param a polynomial
+ * @param wp pointer of wm
+ * @param wm shared working memory
+ */
+void f2p_square(mpz_t r, mpz_t a, int wp, f2p_wm_t *wm)
+{
+    mpz_t *x = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
+    mpz_set_ui(*x, 0);
+    int deg = f2p_degree(a);
+    for (int i = 0; i <= deg; i++) {
+        if (mpz_tstbit(a, i)) {
+            mpz_setbit(*x, 2 * i);
+        }
+    }
+    mpz_set(r, *x);
+}
+
+#if 1
+/**
+ * Calculate r = (a * a) % mod
+ *
+ * use 1 wm
+ *
+ * @param r result
+ * @param a polynomial
+ * @param mod modulus polynomial
+ * @param wp pointer of wm
+ * @param wm shared working memory
+ */
+void f2p_pow2mod(mpz_t r, mpz_t a, mpz_t mod, int wp, f2p_wm_t *wm)
+{
+    int zcmp = mpz_cmp_ui(mod, 0);
+    assert(zcmp != 0); // zero divide
+    mpz_t *x = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
+    f2p_square(*x, a, wp, wm); // 1 wm
+    mpz_set(r, *x);
+    f2p_mod(r, mod, wp, wm); // 1 wm
+}
+#else
+/**
  * Calculate r = (a * a) % mod
  *
  * use 3 wm
@@ -311,6 +358,7 @@ void f2p_pow2mod(mpz_t r, mpz_t a, mpz_t mod, int wp, f2p_wm_t *wm)
         }
     }
 }
+#endif
 
 /**
  * calculate r = x^e % mod.
