@@ -1,3 +1,5 @@
+AUTOMAKE_OPTIONS = subdir-objects
+
 TESTS = test_f2p test_f2p_exeuclid test_minpoly test_minpoly_ntl \
  test_irreducible_ntl test_jump_ntl
 
