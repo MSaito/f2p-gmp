@@ -300,11 +300,11 @@ void f2p_square(mpz_t r, mpz_t a, int wp, f2p_wm_t *wm)
     mpz_set(r, *x);
 }
 
-#if 1
+#if 0
 /**
  * Calculate r = (a * a) % mod
  *
- * use 1 wm
+ * use 2 wm
  *
  * @param r result
  * @param a polynomial
@@ -320,6 +320,27 @@ void f2p_pow2mod(mpz_t r, mpz_t a, mpz_t mod, int wp, f2p_wm_t *wm)
     assert(wp <= wm->max_size);
     f2p_square(*x, a, wp, wm); // 1 wm
     mpz_set(r, *x);
+    f2p_mod(r, mod, wp, wm); // 1 wm
+}
+#elif 1
+/**
+ * Calculate r = (a * a) % mod
+ *
+ * use 1 wm
+ *
+ * @param r result
+ * @param a polynomial
+ * @param mod modulus polynomial
+ * @param wp pointer of wm
+ * @param wm shared working memory
+ */
+void f2p_pow2mod(mpz_t r, mpz_t a, mpz_t mod, int wp, f2p_wm_t *wm)
+{
+    int zcmp = mpz_cmp_ui(mod, 0);
+    assert(zcmp != 0); // zero divide
+    mpz_set(r, a);
+    f2p_mod(r, mod, wp, wm); // 1 wm
+    f2p_square(r, r, wp, wm); // 1 wm
     f2p_mod(r, mod, wp, wm); // 1 wm
 }
 #else
@@ -388,11 +409,49 @@ void f2p_powermod(mpz_t r, mpz_t x, mpz_t e, mpz_t mod, int wp, f2p_wm_t *wm)
         if (mpz_tstbit(e, bpos) == 1) {
             f2p_mulmod(r, r, *s, mod, wp, wm); // 3 wm
         }
-        f2p_pow2mod(*s, *s, mod, wp, wm); // 3 wm
+        f2p_pow2mod(*s, *s, mod, wp, wm); // 1 wm
         bpos++;
     }
     //mpz_set(r, *z);
 }
+
+/**
+ * calculate r = t^e % mod. in F2[t].
+ *
+ * use 1 wm
+ *
+ * @param r residue polynomial whose degree is less than mod polynomial
+ * @param e exponent (big integer)
+ * @param mod polynomial
+ * @param wp pointer of wm
+ * @param wm shared working memory
+ */
+void f2p_Tpowermod(mpz_t r, mpz_t e, mpz_t mod, int wp, f2p_wm_t *wm)
+{
+    int zcmp = mpz_cmp_ui(mod, 0);
+    assert(zcmp != 0); // zero divide
+    mpz_t *len = &(wm->ar[wp++]);
+    assert(wp <= wm->max_size);
+    mpz_set(*len, e);
+    mp_bitcnt_t mdeg = f2p_degree(mod);
+    if (mpz_cmp_ui(*len, mdeg) < 0) {
+        mpz_setbit(r, mpz_get_ui(*len));
+        return;
+    }
+    mpz_set(r, mod);
+    mpz_clrbit(r, mdeg);
+    mp_bitcnt_t diff = mdeg - f2p_degree(r);
+    f2p_lshift(r, diff);
+    mpz_sub_ui(*len, *len, diff);
+    while (mpz_cmp_ui(*len, mdeg) >= 0) {
+        mpz_xor(r, r, mod);
+        diff = mdeg - f2p_degree(r);
+        f2p_lshift(r, diff);
+        mpz_sub_ui(*len, *len, diff);
+    }
+    // return r;
+}
+
 
 /**
  * extended euclid

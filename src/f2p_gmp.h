@@ -109,6 +109,8 @@ extern "C" {
     void f2p_powermod(mpz_t r, mpz_t x, mpz_t e, mpz_t mod,
                       int wp, f2p_wm_t *wm);
 
+    void f2p_Xpowermod(mpz_t r, mpz_t e, mpz_t mod, int wp, f2p_wm_t *wm);
+
     void f2p_square(mpz_t r, mpz_t a, int wp, f2p_wm_t *wm);
 
     void f2p_exeuclid(mpz_t a, mpz_t b, mpz_t c, mpz_t x, mpz_t y,
