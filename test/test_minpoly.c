@@ -22,7 +22,7 @@ int f2p_annihilate(mpz_t minpoly, tinymt32_t * tiny32, int mexp)
     }
 }
 
-int test_minpoly(int seed, int verbose)
+int test_minpoly(uint32_t seed, int verbose)
 {
     if (verbose) {
         printf("start test_minpoly\n");
@@ -48,11 +48,11 @@ int test_minpoly(int seed, int verbose)
     f2p_get_hexstr(buff, seq);
     printf("seq = %s\n", buff);
     f2p_minpoly(poly, seq, mexp);
-    int deg = f2p_degree(poly);
+    unsigned long deg = f2p_degree(poly);
     //int deg = f2p_degree(poly);
     //printf("deg(poly) = %d\n", deg);
     f2p_get_hexstr(buff, poly);
-    printf("poly = %d,%s\n", deg, buff);
+    printf("poly = %lu,%s\n", deg, buff);
     int ok = 1;
 #if 0
     for (int i = 0; i < 100; i++) {
@@ -286,7 +286,7 @@ int main(int argc, char * argv[])
         verbose = 1;
     }
     if (argc > 2) {
-        seed = strtoul(argv[2], NULL, 10);
+        seed = (uint32_t)(strtoul(argv[2], NULL, 10));
     }
     r *= test_minpoly(seed, verbose);
     //r *= test_annihilate();

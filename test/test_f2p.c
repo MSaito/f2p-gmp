@@ -57,16 +57,16 @@ int test_degree(int verbose, int wp, f2p_wm_t *wm)
     assert(wp <= wm->max_size);
 
     f2p_set_binstr(*x, "101");
-    int deg = f2p_degree(*x);
+    size_t deg = f2p_degree(*x);
     int ok = 1;
     if (deg != 2) {
-        printf("test_degree failure expected 2 returns %d\n", deg);
+        printf("test_degree failure expected 2 returns %zu\n", deg);
         ok = 0;
     }
     f2p_set_binstr(*x, "1");
     deg = f2p_degree(*x);
     if (deg != 0) {
-        printf("test_degree failure expected 0 returns %d\n", deg);
+        printf("test_degree failure expected 0 returns %zu\n", deg);
         ok = 0;
     }
     if (verbose) {

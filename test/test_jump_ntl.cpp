@@ -48,13 +48,13 @@ void gmp_calc_jump(GF2X& jump, mpz_t minpoly, mpz_t step)
     mpz_clear(jpoly);
 }
 
-bool test_calc_jump(int degree, bool verbose)
+bool test_calc_jump(long degree, bool verbose)
 {
     bool ok = true;
     GF2X poly;
     GF2X ntl_minpoly;
     BuildIrred(poly, degree);
-    int step = degree * 10 + 7;
+    long step = degree * 10 + 7;
     ZZ ntl_step(step);
     GF2X ntl_jump;
     GF2X f2p_jump;
@@ -90,12 +90,12 @@ int main(int argc, char * argv[])
 {
     bool verbose = false;
     bool ok = true;
-    int degree = 127;
+    long degree = 127;
     if (argc > 1 && argv[1][0] == 'v') {
         verbose = true;
     }
     if (argc > 2) {
-        degree = strtoull(argv[2], NULL, 10);
+        degree = strtol(argv[2], NULL, 10);
     }
 #if 0
     tiny32.mat1 = 0x8f7011ee;

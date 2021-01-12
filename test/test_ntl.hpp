@@ -9,11 +9,11 @@
 
 static inline void to_hexstring(std::string& str, const NTL::GF2X& poly)
 {
-    int d = deg(poly);
-    int m = d / 64;
+    long d = deg(poly);
+    long m = d / 64;
     char buff[200];
     str = "";
-    for (int c = m; c >= 0; c--) {
+    for (long c = m; c >= 0; c--) {
         uint64_t mask = 1;
         uint64_t p = 0;
         for(int i = 0; i < 64; i++) {
@@ -29,8 +29,8 @@ static inline void to_hexstring(std::string& str, const NTL::GF2X& poly)
 
 static inline void to_binstring(std::string& str, const NTL::GF2X& poly)
 {
-    int d = deg(poly);
-    int m = d / 64;
+    long d = deg(poly);
+    long m = d / 64;
     str = "";
     for (int c = 0; c <= m; c++) {
         for(int i = 0; i < 64; i++) {
@@ -48,10 +48,10 @@ static inline void hexto_poly(NTL::GF2X& poly, const std::string& str)
 {
     NTL::GF2X x1;
     SetCoeff(x1, 1, 1);
-    int len = str.length();
+    unsigned long len = str.length();
     poly = 0;
-    for (int i = 0; i < len; i++) {
-        char c = tolower(str[i]);
+    for (unsigned int i = 0; i < len; i++) {
+        char c = static_cast<char>(tolower(static_cast<char>(str[i])));
         int d;
         if (isdigit(c)) {
             d = c - '0';
@@ -75,8 +75,8 @@ static inline void ntl_print(const char *s, const NTL::GF2X& x)
 {
     std::string str;
     to_binstring(str, x);
-    int d = deg(x);
-    printf("%s %d,%s\n", s, d, str.c_str());
+    long d = deg(x);
+    printf("%s %ld,%s\n", s, d, str.c_str());
     fflush(stdout);
 }
 

@@ -17,7 +17,7 @@ unsigned int dummy()
     return tinymt32_generate_uint32(&tiny32);
 }
 
-void ntl_exeuclid2(GF2X& a, GF2X& c, GF2X& x, GF2X& y, int m)
+void ntl_exeuclid2(GF2X& a, GF2X& c, GF2X& x, GF2X& y, long m)
 {
     PUTS("f2p_exeuclid2 start\n");
     assert(!IsZero(x));
@@ -38,7 +38,7 @@ void ntl_exeuclid2(GF2X& a, GF2X& c, GF2X& x, GF2X& y, int m)
     PRT("r1 = ", r1);
     PRT("a0 = ", a0);
     PRT("a1 = ", a1);
-    int dr = deg(r0);
+    long dr = deg(r0);
     while (dr >= m) {
         DivRem(q1, r2, r0, r1);
         tmp = q1 * a1;
